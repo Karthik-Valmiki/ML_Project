@@ -1,0 +1,5 @@
+Task,Model,Validation Scheme,Primary Metric 1,Primary Metric 2,Primary Metric 3,R^2 Score
+Continuous Traffic Modeling,Multiple Linear Regression,5-Fold Cross-Validation,MSE = 0.0005,RMSE = 0.0218,MAE = 0.0099,0.9981
+Bot Classification (Baseline),Logistic Regression,5-Fold Stratified CV,Accuracy = 90.78%,Precision = 89.99%,Recall = 96.29%,F1 = 0.9303
+Bot Classification (Resampled),Logistic Regression + Resampling,5-Fold Stratified CV + Bootstrapping,Accuracy = 90.80%,Precision = 94.47%,Recall = 90.92%,F1 = 0.9266
+Holdout Final Evaluation,Logistic Regression (Final),"Unseen Test Set (51,535 samples)",Accuracy = 90.86%,Precision = 90.00%,Recall = 96.42%,F1 = 0.9310 (AUC: 0.9770)

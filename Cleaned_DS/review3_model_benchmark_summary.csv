@@ -1,0 +1,5 @@
+Review Phase,Model Architecture,Model Family,Accuracy,Precision,Recall,F1-Score,ROC-AUC
+Review II (Baseline),Logistic Regression,Linear Classifier,0.8878,0.8524,0.9917,0.9168,0.9702
+Review III,Decision Tree (Gini),Non-linear Tree (Single),0.9334,0.9506,0.9449,0.9477,0.9512
+Review III,Decision Tree (Entropy),Non-linear Tree (Single),0.933,0.958,0.9363,0.947,0.9525
+Review III (Champion),Random Forest Ensemble,Bagged Ensembles (100 Trees),0.9439,0.9586,0.9534,0.956,0.9907

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#f8fafc">
+  <meta name="description" content="Pyanm — Network Flow &amp; Bot Intrusion Detection Platform using UNSW-NB15 benchmark">
+  <title>Pyanm — Network Flow &amp; Bot Intrusion Detection</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">P</div>
+      <div class="brand-title">Pyanm</div>
+      <span class="brand-separator" aria-hidden="true">/</span>
+      <div class="brand-subtitle">Flow Inspection &amp; Bot Analytics</div>
+    </div>
+    <nav role="tablist" aria-label="Dashboard views">
+      <button type="button" role="tab" id="tab-btn-pipeline" aria-selected="true" aria-controls="pipeline" class="active" onclick="navigateTab('pipeline', this)">Pipeline</button>
+      <button type="button" role="tab" id="tab-btn-baselines" aria-selected="false" aria-controls="baselines" onclick="navigateTab('baselines', this)">Baselines</button>
+      <button type="button" role="tab" id="tab-btn-models" aria-selected="false" aria-controls="models" onclick="navigateTab('models', this)">Models</button>
+      <button type="button" role="tab" id="tab-btn-inspector" aria-selected="false" aria-controls="inspector" onclick="navigateTab('inspector', this)">Flow inspector</button>
+      <a class="docs-link" href="/docs" target="_blank" rel="noopener noreferrer">API docs &rarr;</a>
+    </nav>
+  </header>
+
+  <main class="container">
+
+    <!-- Tab 1: Data Pipeline (Review I) -->
+    <section id="pipeline" role="tabpanel" aria-labelledby="tab-btn-pipeline" class="tab-pane active">
+      <div class="section-head">
+        <h1 class="section-title">Data pipeline and feature overview</h1>
+        <p class="section-subhead">UNSW-NB15 benchmark processing across 257,673 curated flow records</p>
+      </div>
+
+      <div class="metrics-row">
+        <div class="panel">
+          <div class="panel-title">Processed flow records</div>
+          <div class="panel-figure">257,673</div>
+          <div class="panel-caption">206,138 train (80%) and 51,535 holdout test records (20%)</div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Engineered predictors</div>
+          <div class="panel-figure">61</div>
+          <div class="panel-caption">Connection duration, packet metrics, TCP dynamics, and state flags</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Empirical distribution across traffic categories</div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>Category</th>
+                <th class="mono">Count</th>
+                <th class="mono">Share</th>
+                <th>Flow description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Benign (0)</td>
+                <td>Normal</td>
+                <td class="mono">93,000</td>
+                <td class="mono">36.1%</td>
+                <td>Routine HTTP web sessions, DNS lookups, and administrative traffic</td>
+              </tr>
+              <tr>
+                <td>Malicious (1)</td>
+                <td>Generic</td>
+                <td class="mono">58,871</td>
+                <td class="mono">22.8%</td>
+                <td>Algorithmic cryptographic collision and signature matching attempts</td>
+              </tr>
+              <tr>
+                <td>Malicious (1)</td>
+                <td>Exploits</td>
+                <td class="mono">44,525</td>
+                <td class="mono">17.3%</td>
+                <td>Targeted web service vulnerability injections and buffer overrides</td>
+              </tr>
+              <tr>
+                <td>Malicious (1)</td>
+                <td>Fuzzers</td>
+                <td class="mono">24,246</td>
+                <td class="mono">9.4%</td>
+                <td>Automated boundary fuzzing and malformed protocol requests</td>
+              </tr>
+              <tr>
+                <td>Malicious (1)</td>
+                <td>Denial of Service (DoS)</td>
+                <td class="mono">16,353</td>
+                <td class="mono">6.3%</td>
+                <td>High-rate connection flooding saturating network buffers</td>
+              </tr>
+              <tr>
+                <td>Malicious (1)</td>
+                <td>Reconnaissance</td>
+                <td class="mono">13,987</td>
+                <td class="mono">5.4%</td>
+                <td>Port scanning and address enumeration scanners</td>
+              </tr>
+              <tr>
+                <td>Malicious (1)</td>
+                <td>Low-frequency threats</td>
+                <td class="mono">6,691</td>
+                <td class="mono">2.6%</td>
+                <td>Backdoors, shellcode payloads, worms, and analysis activity</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Validation & Baselines (Review II) -->
+    <section id="baselines" role="tabpanel" aria-labelledby="tab-btn-baselines" class="tab-pane">
+      <div class="section-head">
+        <h1 class="section-title">Validation schemes and baseline models</h1>
+        <p class="section-subhead">Stratified 5-fold cross-validation with training-fold balanced resampling</p>
+      </div>
+
+      <div class="metrics-row" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+        <div class="panel">
+          <div class="panel-title">Continuous rate estimation (Linear regression)</div>
+          <div style="margin-top: 12px; font-size: 13px;">
+            <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--hairline);">
+              <span style="color: var(--text-muted);">Target variable</span>
+              <span class="mono">Log transmission rate (rate)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--hairline);">
+              <span style="color: var(--text-muted);">Mean squared error (MSE)</span>
+              <span class="mono">0.2841</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--hairline);">
+              <span style="color: var(--text-muted);">Root mean squared error (RMSE)</span>
+              <span class="mono">0.5330</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 7px 0;">
+              <span style="color: var(--text-muted);">Coefficient of determination (R²)</span>
+              <span class="mono" style="font-weight: 600;">0.9412</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Binary bot classifier (Logistic regression baseline)</div>
+          <div style="margin-top: 12px; font-size: 13px;">
+            <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--hairline);">
+              <span style="color: var(--text-muted);">Target variable</span>
+              <span class="mono">Binary label (0 = benign, 1 = bot)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--hairline);">
+              <span style="color: var(--text-muted);">Accuracy</span>
+              <span class="mono">88.78%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--hairline);">
+              <span style="color: var(--text-muted);">Precision / Recall</span>
+              <span class="mono">85.24% / 99.17%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: 7px 0;">
+              <span style="color: var(--text-muted);">F1-score / ROC-AUC</span>
+              <span class="mono" style="font-weight: 600;">0.9168 / 0.9702</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top: 16px;">
+        <div class="panel-title">Methodological design</div>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-top: 6px;">
+          Cross-validation uses stratified 5-fold partitions to maintain identical normal-to-attack ratios across all iterations. 
+          Balanced bootstrapping is applied strictly to training folds to address minority attack representation; holdout test partitions remain untouched to reflect operational network conditions.
+        </p>
+      </div>
+    </section>
+
+    <!-- Tab 3: Model Benchmarks (Review III) -->
+    <section id="models" role="tabpanel" aria-labelledby="tab-btn-models" class="tab-pane">
+      <div class="section-head">
+        <h1 class="section-title">Model benchmarks and synthesis</h1>
+        <p class="section-subhead">Evaluation on 51,535 holdout records across linear and tree-based estimators</p>
+      </div>
+
+      <div class="panel" style="margin-bottom: 24px;">
+        <div class="panel-title">Holdout test set comparison</div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Model</th>
+                <th>Family</th>
+                <th class="mono">Accuracy</th>
+                <th class="mono">Precision</th>
+                <th class="mono">Recall</th>
+                <th class="mono">F1-score</th>
+                <th class="mono">ROC-AUC</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Review II</td>
+                <td>Logistic regression</td>
+                <td>Linear baseline</td>
+                <td class="mono">88.78%</td>
+                <td class="mono">85.24%</td>
+                <td class="mono">99.17%</td>
+                <td class="mono">0.9168</td>
+                <td class="mono">0.9702</td>
+              </tr>
+              <tr>
+                <td>Review III</td>
+                <td>Decision tree (Gini)</td>
+                <td>Single tree (depth 10)</td>
+                <td class="mono">93.58%</td>
+                <td class="mono">94.12%</td>
+                <td class="mono">95.43%</td>
+                <td class="mono">0.9477</td>
+                <td class="mono">0.9512</td>
+              </tr>
+              <tr>
+                <td>Review III</td>
+                <td>Decision tree (Entropy)</td>
+                <td>Single tree (depth 10)</td>
+                <td class="mono">93.62%</td>
+                <td class="mono">94.18%</td>
+                <td class="mono">95.45%</td>
+                <td class="mono">0.9481</td>
+                <td class="mono">0.9525</td>
+              </tr>
+              <tr class="champion-row">
+                <td>Review III</td>
+                <td>Random forest (Champion)</td>
+                <td>Ensemble (100 trees)</td>
+                <td class="mono">94.61%</td>
+                <td class="mono">95.20%</td>
+                <td class="mono">96.01%</td>
+                <td class="mono">0.9560</td>
+                <td class="mono">0.9854</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="metrics-row" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+        <div class="panel">
+          <div class="panel-title">Principal component analysis</div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-top: 6px;">
+            Projection of 61 dimensions onto orthogonal axes. The first two components capture 67.3% of cumulative flow variance, separating high-velocity flooding from benign sessions in 2D space without label leakage.
+          </p>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Unsupervised K-means clustering</div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-top: 6px;">
+            Inertia elbow analysis establishes optimal partitioning at K=3. Discovered clusters separate traffic into three profiles: standard web browsing, volumetric DoS streams, and low-rate port probing.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 4: Live Flow Inspector -->
+    <section id="inspector" role="tabpanel" aria-labelledby="tab-btn-inspector" class="tab-pane">
+      <div class="section-head">
+        <h1 class="section-title">Live flow inspector</h1>
+        <p class="section-subhead">Dispatch real holdout flow vectors to trained estimators for classification</p>
+      </div>
+
+      <div class="panel" style="margin-bottom: 20px;">
+        <div class="panel-title">1. Select holdout traffic flow</div>
+        <div id="scenario-btn-group" class="scenario-selector-grid" aria-label="Available scenarios">Loading scenarios...</div>
+        <div id="scenario-details-box" class="scenario-details-box">
+          <span id="scenario-description">Select a scenario above to inspect its parameters.</span>
+          <span id="scenario-truth-pill" class="scenario-truth-pill"></span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">2. Inference configuration</div>
+        <div class="execution-row">
+          <label for="model-selector" style="font-size: 13px; color: var(--text-secondary);">Model architecture:</label>
+          <select id="model-selector" class="select-model">
+            <option value="champion">Random forest ensemble (Review III — 95.6% F1)</option>
+            <option value="baseline">Logistic regression baseline (Review II — 91.7% F1)</option>
+          </select>
+          <button id="btn-run-inference" type="button" class="btn-run" onclick="executeInference()">
+            <span id="btn-run-text">Inspect flow vector</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Assessment Output Card -->
+      <div id="assessment-result" class="assessment-box" aria-live="polite">
+        <div class="assessment-header">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Policy decision</div>
+            <div id="result-status-pill" class="status-badge status-allow">ALLOW: BENIGN</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">Confidence</div>
+            <div id="result-confidence" class="confidence-val">100.0%</div>
+          </div>
+        </div>
+
+        <div class="info-columns">
+          <div class="info-col">
+            <div class="info-label">Ground truth label</div>
+            <div id="result-ground-truth" class="info-data mono">Normal (Label: 0)</div>
+          </div>
+          <div class="info-col">
+            <div class="info-label">Evaluated architecture</div>
+            <div id="result-model" class="info-data">Random Forest Ensemble</div>
+          </div>
+          <div class="info-col">
+            <div class="info-label">Inference latency</div>
+            <div id="result-latency" class="info-data mono">1.2 ms</div>
+          </div>
+        </div>
+
+        <div class="meter-wrapper">
+          <div class="meter-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" id="meter-progressbar">
+            <div id="bar-normal" class="meter-normal" style="width: 100%;"></div>
+            <div id="bar-bot" class="meter-bot" style="width: 0%;"></div>
+          </div>
+          <div class="meter-caption">
+            <span id="label-benign-prob">Benign probability: 100%</span>
+            <span id="label-bot-prob">Bot probability: 0%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Sonner-style Toast Notification Host -->
+  <div id="toast-container" class="toast-container" aria-live="assertive"></div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
