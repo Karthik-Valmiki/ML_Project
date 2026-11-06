@@ -6,7 +6,7 @@ A modular machine learning system and REST API designed to detect automated mali
 
 ## Dataset
 
-For dataset, use this website: [https://www.kaggle.com/datasets/mrwellsdavid/unsw-nb15](https://www.kaggle.com/datasets/mrwellsdavid/unsw-nb15)
+Download datasets from the link: [https://www.kaggle.com/datasets/mrwellsdavid/unsw-nb15](https://www.kaggle.com/datasets/mrwellsdavid/unsw-nb15)
 
 ---
 
